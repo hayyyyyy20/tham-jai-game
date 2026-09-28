@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ธรรมใจ : เส้นทางแห่งสติ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap');
+:root{
+  --bg:#f7f1e5; --paper:#fffdf8; --ink:#3f3429; --muted:#776b5e;
+  --gold:#b88732; --gold2:#e5c77a; --green:#4f7657; --green2:#dfeadf;
+  --rose:#9b5b64; --rose2:#f2dfe2; --blue:#4e6f8f; --blue2:#e2ebf4;
+  --line:#dfd3c1; --shadow:0 16px 45px rgba(67,48,25,.14);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--ink);
+  font-family:'Prompt','Sarabun',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(229,199,122,.25), transparent 28%),
+    radial-gradient(circle at 90% 85%, rgba(79,118,87,.15), transparent 25%),
+    var(--bg);
+}
+button{font-family:inherit}
+.app{max-width:1180px;margin:auto;padding:22px}
+.topbar{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:50px;height:50px;border-radius:16px;background:linear-gradient(135deg,#c89b48,#8d682c);display:grid;place-items:center;color:#fff;font-size:26px;box-shadow:0 8px 20px rgba(141,104,44,.25)}
+.brand h1{font-size:21px;margin:0}.brand small{color:var(--muted)}
+.stats{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.pill{background:rgba(255,253,248,.85);border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:13px}
+.layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.sidebar,.card{background:rgba(255,253,248,.92);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.sidebar{padding:16px;height:max-content;position:sticky;top:14px}
+.side-title{font-weight:700;margin:4px 6px 12px}
+.navbtn{width:100%;border:0;background:transparent;text-align:left;padding:11px 12px;border-radius:14px;color:var(--ink);cursor:pointer;font-size:14px;margin-bottom:4px}
+.navbtn:hover,.navbtn.active{background:#f1e7d4}
+.character-mini{display:flex;gap:10px;align-items:center;padding:10px 8px;border-top:1px dashed var(--line);margin-top:8px}
+.avatar{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;font-size:23px;flex:none}
+.a1{background:var(--blue2)}.a2{background:var(--rose2)}.a3{background:var(--green2)}
+.meter{height:7px;background:#eee5d8;border-radius:99px;overflow:hidden;margin-top:5px}.fill{height:100%;width:0;background:var(--gold);transition:.35s}
+.main{min-width:0}.screen{display:none}.screen.active{display:block}
+.hero{padding:30px;min-height:560px;display:grid;grid-template-columns:1.25fr .75fr;gap:20px;align-items:center}
+.hero h2{font-size:42px;line-height:1.12;margin:8px 0 14px}.hero p{color:var(--muted);line-height:1.8}
+.tag{display:inline-block;background:#f1e7d4;color:#75551e;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:600}
+.cta{border:0;border-radius:15px;padding:12px 18px;background:var(--ink);color:#fff;cursor:pointer;font-weight:600;margin-top:12px}
+.cta.gold{background:var(--gold)}.cta.ghost{background:#f4eee3;color:var(--ink);border:1px solid var(--line)}
+.scene-art{min-height:350px;border-radius:26px;background:linear-gradient(160deg,#e9dfc9,#fbf8f0);display:grid;place-items:center;border:1px solid var(--line);position:relative;overflow:hidden}
+.sun{width:170px;height:170px;border-radius:50%;background:#e5c77a;position:absolute;top:30px;right:35px;opacity:.55}
+.temple{font-size:150px;filter:drop-shadow(0 14px 10px rgba(70,50,20,.13));z-index:2}
+.cloud{position:absolute;font-size:45px;opacity:.45}.c1{left:22px;top:65px}.c2{right:30px;bottom:50px}
+.section{padding:22px}
+.section h3{margin-top:0}.muted{color:var(--muted)}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.chapter{border:1px solid var(--line);background:#fffaf1;border-radius:18px;padding:16px;cursor:pointer;text-align:left}
+.chapter:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(60,40,20,.08)}
+.chapter strong{display:block;margin-bottom:5px}.chapter span{font-size:13px;color:var(--muted)}
+.story{padding:22px}
+.chapter-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}
+.chapter-head h2{margin:0}.progress{font-size:12px;color:var(--muted)}
+.dialogue{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:start}
+.portrait{height:260px;border-radius:24px;display:grid;place-items:center;font-size:105px;border:1px solid var(--line);background:#f5eee2}
+.speech{background:#fffaf1;border:1px solid var(--line);border-radius:22px;padding:20px;min-height:260px}
+.name{font-weight:700;color:var(--gold);margin-bottom:9px}.speech p{line-height:1.8;margin:7px 0}
+.choices{display:grid;gap:10px;margin-top:16px}
+.choice{border:1px solid var(--line);background:white;border-radius:15px;padding:13px 15px;text-align:left;cursor:pointer;color:var(--ink);transition:.2s}
+.choice:hover{border-color:var(--gold);background:#fffaf1}
+.choice small{display:block;color:var(--muted);margin-top:4px}
+.feedback{margin-top:14px;padding:14px;border-radius:16px;display:none;border:1px solid var(--line);background:#f5efe4;line-height:1.7}
+.feedback.show{display:block}.feedback.good{background:#edf5ed;border-color:#cbdccf}.feedback.warn{background:#fbefef;border-color:#e6c9cd}
+.lesson{padding:22px}.lesson h2{margin-top:0}
+.lesson-card{padding:18px;border:1px solid var(--line);border-radius:18px;background:#fffaf1;margin:10px 0}
+.lesson-card b{color:var(--green)}
+.quiz{padding:22px}.qbox{padding:18px;border:1px solid var(--line);border-radius:18px;background:#fffaf1;margin-bottom:12px}
+.option{display:block;width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;background:white;text-align:left;margin-top:8px;cursor:pointer}
+.result{padding:30px;text-align:center}.score{font-size:52px;font-weight:700;color:var(--gold)}
+.badge{display:inline-block;padding:7px 12px;border-radius:999px;background:#efe2bf;margin:5px;font-size:13px}
+.footer-note{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:static}.hero{grid-template-columns:1fr}.hero h2{font-size:34px}.dialogue{grid-template-columns:1fr}.portrait{height:180px}.chapter-grid{grid-template-columns:1fr}}
+
+/* ===== DELUXE VISUAL NOVEL UI ===== */
+:root{
+  --night:#182329; --cream:#fff8ea; --pink:#d9899b; --violet:#8068a8;
+  --heart:#d85b75; --sky:#b8d8e8;
+}
+body{background:
+  radial-gradient(circle at 15% 8%,rgba(255,220,153,.30),transparent 25%),
+  radial-gradient(circle at 85% 25%,rgba(190,215,235,.25),transparent 28%),
+  linear-gradient(135deg,#f7f1e5,#eee6d8);}
+.start-overlay{position:fixed;inset:0;z-index:100;background:
+  linear-gradient(180deg,rgba(18,29,35,.80),rgba(18,29,35,.93)),
+  radial-gradient(circle at 50% 20%,rgba(226,194,119,.22),transparent 30%);
+  display:grid;place-items:center;padding:24px;transition:.6s}
+.start-overlay.hide{opacity:0;pointer-events:none}
+.start-card{width:min(940px,96vw);min-height:600px;border-radius:32px;overflow:hidden;position:relative;
+  background:linear-gradient(145deg,#fffaf0,#f1e6d4);box-shadow:0 30px 90px rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.5);display:grid;grid-template-columns:1fr 1fr}
+.start-copy{padding:54px 48px;display:flex;flex-direction:column;justify-content:center}
+.kicker{letter-spacing:.12em;text-transform:uppercase;font-size:12px;color:#876d3d;font-weight:700}
+.start-copy h1{font-size:clamp(42px,7vw,72px);line-height:.98;margin:12px 0;color:#352b23}
+.start-copy h1 span{color:#a9792e}
+.start-copy p{color:#6e6256;line-height:1.8}
+.start-art{position:relative;overflow:hidden;background:linear-gradient(180deg,#c8dfeb 0%,#e9d9b7 66%,#9db58c 66%,#6f916f 100%)}
+.start-art:before{content:"";position:absolute;inset:auto 0 0;height:43%;background:
+  linear-gradient(165deg,transparent 45%,rgba(255,255,255,.24) 46%,transparent 47%),
+  repeating-linear-gradient(90deg,rgba(55,78,53,.28) 0 2px,transparent 2px 34px)}
+.start-sun{position:absolute;width:150px;height:150px;border-radius:50%;background:#f7d88c;right:55px;top:55px;box-shadow:0 0 60px rgba(255,225,145,.7)}
+.cg-school{position:absolute;left:10%;right:10%;bottom:16%;height:48%;background:#f7eee0;border:5px solid #8f7251;border-radius:8px 8px 3px 3px;box-shadow:0 18px 0 rgba(74,63,44,.12)}
+.cg-school:before{content:"";position:absolute;left:-7%;right:-7%;top:-17%;height:18%;background:#9b6b45;clip-path:polygon(4% 100%,50% 0,96% 100%);border:3px solid #735036}
+.cg-school:after{content:"โรงเรียน • SCHOOL";position:absolute;left:50%;top:13%;transform:translateX(-50%);font-weight:700;color:#745c43;font-size:15px;white-space:nowrap}
+.school-window{position:absolute;top:34%;width:13%;height:34%;background:#b8d8e8;border:4px solid #7d6a55}
+.w1{left:9%}.w2{left:29%}.w3{left:49%}.w4{left:69%}
+.school-door{position:absolute;bottom:0;left:43%;width:14%;height:45%;background:#8b694e;border:4px solid #6d513d}
+.chara{position:absolute;bottom:10%;width:145px;height:260px;filter:drop-shadow(0 18px 12px rgba(0,0,0,.2))}
+.chara svg{width:100%;height:100%}
+.chara-a{left:6%}.chara-b{right:5%}
+.spark{position:absolute;color:#fff8c9;font-size:25px;animation:float 3s infinite ease-in-out}
+.s1{left:18%;top:18%}.s2{left:65%;top:30%;animation-delay:.8s}.s3{left:76%;top:12%;animation-delay:1.4s}
+@keyframes float{50%{transform:translateY(-12px) scale(1.08)}}
+.start-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.sound-toggle{position:absolute;right:18px;top:18px;border:0;border-radius:999px;padding:9px 13px;background:rgba(255,255,255,.78);cursor:pointer}
+.character-card{border:1px solid var(--line);border-radius:20px;background:#fffaf1;padding:12px;display:flex;gap:12px;align-items:center}
+.character-art{width:90px;height:120px;flex:none;border-radius:16px;background:linear-gradient(180deg,#e5f0f5,#f7e7dc);overflow:hidden}
+.character-art svg{width:100%;height:100%}
+.heart-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:8px}
+.heart{font-size:19px;color:#c7bfb4;filter:grayscale(.2);transition:.2s}
+.heart.on{color:var(--heart);transform:scale(1.08);text-shadow:0 2px 8px rgba(216,91,117,.25)}
+.affinity{height:7px;border-radius:99px;background:#eee5d8;overflow:hidden;margin-top:5px}
+.affinity>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#e7a1b0,#d85b75);transition:.4s}
+.dialogue{position:relative}
+.portrait-wrap{display:flex;flex-direction:column;gap:8px}
+.portrait{overflow:hidden;padding:0!important;background:linear-gradient(180deg,#e6f0f4,#f7e5db)!important}
+.portrait svg{width:100%;height:100%}
+.cg-banner{margin:-2px 0 18px;border-radius:20px;height:210px;overflow:hidden;position:relative;
+  background:linear-gradient(180deg,#c7dfe9 0%,#e9d9ba 66%,#91aa82 66%);border:1px solid var(--line)}
+.cg-banner .school-mini{position:absolute;left:16%;right:16%;bottom:12%;height:56%;background:#f8efe1;border:4px solid #8e7152;border-radius:6px}
+.cg-banner .school-mini:before{content:"";position:absolute;left:-6%;right:-6%;top:-18%;height:20%;background:#9b6b45;clip-path:polygon(3% 100%,50% 0,97% 100%)}
+.cg-banner .tree{position:absolute;right:7%;bottom:0;width:20%;height:70%;background:#6f543b;border-radius:45% 45% 0 0}
+.cg-banner .tree:before{content:"";position:absolute;left:-55%;top:-35%;width:210%;height:65%;border-radius:50%;background:#6f916d;box-shadow:25px 10px 0 #789b75,-25px 15px 0 #668867}
+.cg-banner .label{position:absolute;left:16px;top:12px;background:rgba(255,255,255,.78);border-radius:999px;padding:6px 10px;font-size:12px}
+.ending{padding:20px;border-radius:22px;background:linear-gradient(135deg,#fff8e8,#f4e8d6);border:1px solid var(--line);margin-top:15px}
+.ending h3{margin:0 0 6px}
+.credits{padding:28px;text-align:center}
+.credits .seal{font-size:55px}
+.credit-names{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+.credit-name{background:#f1e7d4;border-radius:999px;padding:8px 13px}
+.sound-note{font-size:12px;color:var(--muted);margin-top:8px}
+@media(max-width:850px){
+ .start-card{grid-template-columns:1fr}.start-art{min-height:300px}.start-copy{padding:34px 26px}
+ .chara{transform:scale(.78);transform-origin:bottom}.hero{min-height:0}
+}
+
+</style>
+</head>
+<body>
+
+<div id="startOverlay" class="start-overlay">
+  <div class="start-card">
+    <button class="sound-toggle" onclick="toggleMusic()" id="musicBtn">🔇 เพลง: ปิด</button>
+    <div class="start-copy">
+      <div class="kicker">HEART MODEL • พระพุทธศาสนา ม.4</div>
+      <h1>ธรรมใจ<br><span>เส้นทางแห่งสติ</span></h1>
+      <p>เกม Interactive Story ที่ให้คุณตัดสินใจจากสถานการณ์ใกล้ตัว แล้วเรียนรู้ว่าหลักธรรมช่วยเปลี่ยน “วิธีคิด → วิธีพูด → วิธีทำ” ได้อย่างไร</p>
+      <div class="start-buttons">
+        <button class="cta gold" onclick="enterGame(true)">▶ เริ่มเกม</button>
+        <button class="cta ghost" onclick="enterGame(false)">📖 ดูวิธีเล่น</button>
+      </div>
+      <div class="sound-note">♪ เพลงประกอบสร้างด้วยเสียงสังเคราะห์ในเกม ไม่ต้องดาวน์โหลดไฟล์เสียง</div>
+    </div>
+    <div class="start-art">
+      <div class="start-sun"></div><span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <div class="cg-school">
+        <div class="school-window w1"></div><div class="school-window w2"></div><div class="school-window w3"></div><div class="school-window w4"></div>
+        <div class="school-door"></div>
+      </div>
+      <div class="chara chara-a">
+        <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="48" r="30" fill="#f2c7a5"/><path d="M30 48Q33 10 61 12Q91 12 91 50L80 39Q61 27 41 39Z" fill="#3d2b2b"/>
+          <path d="M43 53q6 5 12 0M67 53q6 5 12 0" fill="none" stroke="#3b2b27" stroke-width="3"/>
+          <circle cx="51" cy="48" r="3" fill="#352b2b"/><circle cx="73" cy="48" r="3" fill="#352b2b"/>
+          <path d="M48 66q12 8 24 0" fill="none" stroke="#a84f59" stroke-width="3"/>
+          <path d="M26 92Q60 76 94 92L106 190H14Z" fill="#52799a"/><path d="M35 91L60 116 85 91" fill="#fff"/>
+          <path d="M25 105L9 163M95 105L111 163" stroke="#f2c7a5" stroke-width="16" stroke-linecap="round"/>
+          <path d="M40 188L31 216M80 188L89 216" stroke="#2e3d4d" stroke-width="17" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="chara chara-b">
+        <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="48" r="30" fill="#f2c7a5"/><path d="M29 48Q32 9 61 10Q91 10 94 48L84 28Q61 18 37 32Z" fill="#6b4437"/>
+          <path d="M34 48Q39 25 49 23M84 48Q80 24 70 22" fill="none" stroke="#6b4437" stroke-width="8"/>
+          <circle cx="51" cy="51" r="3" fill="#352b2b"/><circle cx="73" cy="51" r="3" fill="#352b2b"/>
+          <path d="M49 67q11 7 22 0" fill="none" stroke="#a84f59" stroke-width="3"/>
+          <path d="M27 93Q60 77 93 93L105 190H15Z" fill="#c86f83"/><path d="M60 93L60 188" stroke="#f7d9df" stroke-width="4"/>
+          <path d="M25 106L10 164M95 106L110 164" stroke="#f2c7a5" stroke-width="16" stroke-linecap="round"/>
+          <path d="M40 188L32 216M80 188L88 216" stroke="#76546a" stroke-width="17" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">☸</div><div><h1>ธรรมใจ : เส้นทางแห่งสติ</h1><small>เกม Interactive Story วิชาพระพุทธศาสนา ม.4</small></div></div>
+    <div class="stats"><button class="pill" onclick="toggleMusic()" id="musicBtnTop">🎵 เพลง</button>
+      <div class="pill">🧠 สติ <b id="mind">0</b></div>
+      <div class="pill">🤝 มิตรภาพ <b id="friend">0</b></div>
+      <div class="pill">🌱 ความดี <b id="good">0</b></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="side-title">เมนูเกม</div>
+      <button class="navbtn active" data-screen="home">🏠 หน้าแรก</button>
+      <button class="navbtn" data-screen="chapters">📖 เลือกบท</button>
+      <button class="navbtn" data-screen="lesson">📚 คลังธรรม</button>
+      <button class="navbtn" data-screen="quiz">📝 แบบทดสอบ</button>
+      <button class="navbtn" data-screen="result">🏆 ผลการเล่น</button>
+      <button class="navbtn" data-screen="credits">👥 เครดิตผู้จัดทำ</button>
+      <div class="side-title" style="margin-top:18px">เพื่อนร่วมทาง</div>
+      <div class="character-mini"><div class="avatar a1"><svg viewBox="0 0 80 80"><circle cx="40" cy="32" r="19" fill="#f2c7a5"/><path d="M20 33Q22 8 41 8Q61 8 62 34L53 22Q39 16 27 25Z" fill="#3d2b2b"/><circle cx="34" cy="33" r="2.5"/><circle cx="48" cy="33" r="2.5"/><path d="M28 54h24l8 24H20Z" fill="#52799a"/></svg></div><div style="flex:1"><b>นนท์</b><div class="muted" style="font-size:12px">ใจร้อน / ชอบความง่าย</div><div class="meter"><div class="fill" id="mNont"></div></div></div></div>
+      <div class="character-mini"><div class="avatar a2"><svg viewBox="0 0 80 80"><circle cx="40" cy="32" r="19" fill="#f2c7a5"/><path d="M20 35Q22 7 41 8Q62 8 64 36L53 20Q40 15 27 25Z" fill="#6b4437"/><circle cx="34" cy="34" r="2.5"/><circle cx="48" cy="34" r="2.5"/><path d="M20 55h40v25H20Z" fill="#c86f83"/></svg></div><div style="flex:1"><b>เมย์</b><div class="muted" style="font-size:12px">เมตตา / ชอบช่วยคน</div><div class="meter"><div class="fill" id="mMay"></div></div></div></div>
+      <div class="character-mini"><div class="avatar a3"><svg viewBox="0 0 80 80"><circle cx="40" cy="32" r="19" fill="#f2c7a5"/><path d="M19 35Q21 8 41 8Q61 8 63 35L52 21Q39 16 27 26Z" fill="#27333b"/><circle cx="34" cy="33" r="2.5"/><circle cx="48" cy="33" r="2.5"/><path d="M20 55h40v25H20Z" fill="#64866e"/></svg></div><div style="flex:1"><b>ภูมิ</b><div class="muted" style="font-size:12px">มุ่งมั่น / จริงจังกับคะแนน</div><div class="meter"><div class="fill" id="mPoom"></div></div></div></div>
+    </aside>
+
+    <main class="main">
+      <section id="home" class="screen active">
+        <div class="card hero">
+          <div>
+            <span class="tag">HEART MODEL × พระพุทธศาสนา ม.4</span>
+            <h2>ทุกการเลือก<br>เปลี่ยนเส้นทางของเรา</h2>
+            <p>รับบทเป็นนักเรียน ม.4 ที่ต้องพบเจอสถานการณ์ในชีวิตประจำวัน แล้วใช้หลักธรรมในการตัดสินใจ เกมจะบันทึกผลจากการเลือกของคุณและพาไปสู่บทสรุปที่แตกต่างกัน</p>
+            <p><b>เป้าหมายของเกม:</b> เรียนรู้ธรรมะ → เข้าใจปัจจุบัน → เห็นคุณค่า → นำไปใช้</p>
+            <button class="cta gold" onclick="showScreen('chapters')">เริ่มการเดินทาง ✨</button>
+            <button class="cta ghost" onclick="showScreen('lesson')">อ่านคลังธรรมก่อน</button>
+          </div>
+          <div class="scene-art"><div class="sun"></div><div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="temple">🛕</div></div>
+        </div>
+        <div class="footer-note">เกมต้นแบบเพื่อการเรียนรู้ • เนื้อหาสรุปตามบทเรียนที่ได้รับ • ทุกตัวละครเป็นตัวละครสมมติ</div>
+      </section>
+
+      <section id="chapters" class="screen">
+        <div class="card section">
+          <h3>📖 เลือกบทเรียน</h3>
+          <p class="muted">แต่ละบทจะให้สถานการณ์และตัวเลือกที่เชื่อมโยงกับหลักธรรม ม.4</p>
+          <div class="chapter-grid">
+            <button class="chapter" onclick="startChapter(1)"><strong>บทที่ 1 — ปัญหาของเพื่อน</strong><span>อริยสัจ 4 • ทุกข์–สมุทัย–นิโรธ–มรรค</span></button>
+            <button class="chapter" onclick="startChapter(2)"><strong>บทที่ 2 — ข้อความในกลุ่มห้อง</strong><span>ศีล 5 • สัมมาวาจา • สัมมากัมมันตะ</span></button>
+            <button class="chapter" onclick="startChapter(3)"><strong>บทที่ 3 — เพื่อนที่กำลังทุกข์</strong><span>พรหมวิหาร 4 • เมตตา–กรุณา–มุทิตา–อุเบกขา</span></button>
+            <button class="chapter" onclick="startChapter(4)"><strong>บทที่ 4 — งานกลุ่มใกล้ส่ง</strong><span>อิทธิบาท 4 • ฉันทะ–วิริยะ–จิตตะ–วิมังสา</span></button>
+            <button class="chapter" onclick="startChapter(5)"><strong>บทที่ 5 — ทำดีในโรงเรียน</strong><span>สังคหวัตถุ 4 • ทาน–ปิยวาจา–อัตถจริยา–สมานัตตตา</span></button>
+            <button class="chapter" onclick="startChapter(6)"><strong>บทที่ 6 — ผลของการกระทำ</strong><span>กฎแห่งกรรม • บุญกิริยาวัตถุ 3</span></button>
+            <button class="chapter" onclick="startChapter(7)"><strong>บทที่ 7 — ฝึกตนให้ครบ 3 ด้าน</strong><span>ไตรสิกขา • ศีล–สมาธิ–ปัญญา</span></button>
+            <button class="chapter" onclick="startChapter(8)"><strong>บทที่ 8 — ทางเลือกสุดท้าย</strong><span>มรรค 8 • เป้าหมายพ้นจากความทุกข์</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section id="story" class="screen">
+        <div class="card story">
+          <div class="chapter-head"><div><div class="tag" id="chapterTag">บทที่ 1</div><h2 id="chapterTitle">...</h2></div><div class="progress" id="storyProgress">สถานการณ์ 1/2</div></div>
+<div class="cg-banner" id="cgBanner"><div class="label">CG • โรงเรียน</div><div class="school-mini"></div><div class="tree"></div></div>
+          <div class="dialogue">
+            <div class="portrait-wrap"><div class="portrait" id="portrait">🧑🏻‍🎓</div>
+<div class="heart-row" id="heartRow" aria-label="ค่าความสนิท"><span class="muted" style="font-size:12px">ความสนิท</span>
+<span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span></div>
+<div class="affinity"><i id="affinityFill"></i></div></div>
+            <div>
+              <div class="speech"><div class="name" id="speaker">...</div><p id="text">...</p></div>
+              <div class="choices" id="choices"></div>
+              <div class="feedback" id="feedback"></div>
+              <button class="cta gold" id="nextBtn" style="display:none" onclick="nextScene()">ไปต่อ →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="lesson" class="screen">
+        <div class="card lesson">
+          <h2>📚 คลังธรรม ม.4</h2>
+          <p class="muted">สรุปสั้น ๆ สำหรับใช้ทบทวนก่อนเล่น</p>
+          <div class="lesson-card"><b>อริยสัจ 4</b><br>ทุกข์ = ปัญหา/สภาพที่ทนได้ยาก • สมุทัย = สาเหตุ • นิโรธ = ความดับทุกข์ • มรรค = แนวทางปฏิบัติเพื่อดับทุกข์</div>
+          <div class="lesson-card"><b>มรรคมีองค์ 8</b><br>สัมมาทิฏฐิ ความเห็นชอบ • สัมมาสังกัปปะ ความดำริชอบ • สัมมาวาจา พูดชอบ • สัมมากัมมันตะ กระทำชอบ • สัมมาอาชีวะ เลี้ยงชีพชอบ • สัมมาวายามะ เพียรชอบ • สัมมาสติ ระลึกชอบ • สัมมาสมาธิ ตั้งจิตมั่นชอบ</div>
+          <div class="lesson-card"><b>ศีล 5</b><br>ไม่ฆ่าสัตว์ • ไม่ลักทรัพย์ • ไม่ประพฤติผิดในกาม • ไม่พูดเท็จ • ไม่ดื่มสุราและของมึนเมา</div>
+          <div class="lesson-card"><b>พรหมวิหาร 4</b><br>เมตตา = ปรารถนาให้ผู้อื่นมีความสุข • กรุณา = ช่วยเมื่อผู้อื่นทุกข์ • มุทิตา = ยินดีเมื่อผู้อื่นได้ดี • อุเบกขา = วางใจเป็นกลางอย่างมีเหตุผล</div>
+          <div class="lesson-card"><b>อิทธิบาท 4</b><br>ฉันทะ = พอใจในสิ่งที่ทำ • วิริยะ = เพียร • จิตตะ = เอาใจใส่ • วิมังสา = คิดพิจารณา ตรวจสอบ และปรับปรุง</div>
+          <div class="lesson-card"><b>สังคหวัตถุ 4</b><br>ทาน = ให้/แบ่งปัน • ปิยวาจา = พูดดี • อัตถจริยา = ทำตนให้เป็นประโยชน์ • สมานัตตตา = วางตนสม่ำเสมอเสมอต้นเสมอปลาย</div>
+          <div class="lesson-card"><b>กฎแห่งกรรม + บุญกิริยาวัตถุ 3</b><br>การกระทำมีผลตามเหตุปัจจัย • บุญกิริยาวัตถุ 3 ได้แก่ ทาน ศีล และภาวนา</div>
+          <div class="lesson-card"><b>ไตรสิกขา</b><br>ศีล = ฝึกกายและพฤติกรรม • สมาธิ = ฝึกจิตให้มั่นคงสงบ • ปัญญา = ฝึกคิดและเข้าใจความจริง</div>
+          <div class="lesson-card"><b>วันสำคัญทางพระพุทธศาสนา</b><br>วิสาขบูชา • มาฆบูชา • อาสาฬหบูชา • เข้าพรรษา และกิจกรรมทางพระพุทธศาสนา</div>
+        </div>
+      </section>
+
+      <section id="quiz" class="screen">
+        <div class="card quiz">
+          <h2>📝 แบบทดสอบท้ายเกม</h2>
+          <p class="muted">ตอบคำถามเพื่อทบทวนความรู้</p>
+          <div id="quizArea"></div>
+          <button class="cta gold" onclick="gradeQuiz()">ตรวจคำตอบ</button>
+          <div id="quizResult" class="feedback"></div>
+        </div>
+      </section>
+
+      <section id="result" class="screen">
+        <div class="card result">
+          <div style="font-size:60px">☸️</div>
+          <h2>บทสรุปการเดินทาง</h2>
+          <div class="score" id="score">0</div>
+          <p id="resultText">เริ่มเล่นเพื่อดูผล</p>
+          <div id="endingBox" class="ending"><h3>ตอนจบของคุณ</h3><p id="endingText">เล่นให้ครบทุกบทเพื่อปลดล็อกตอนจบ</p></div>
+          <div id="badges"></div>
+          <button class="cta gold" onclick="resetGame()">เริ่มใหม่</button>
+          <button class="cta ghost" onclick="showScreen('credits')">ดูเครดิต</button>
+        </div>
+      </section>
+
+      <section id="credits" class="screen">
+        <div class="card credits">
+          <div class="seal">☸️</div>
+          <h2>เครดิตผู้จัดทำ</h2>
+          <p class="muted">โครงงานเกมการเรียนรู้ วิชาพระพุทธศาสนา ระดับชั้น ม.4</p>
+          <div class="credit-names">
+            <span class="credit-name">👤 ผู้จัดทำ: นางสาวณัฎฐพร คงประพันธ์</span>
+            <span class="credit-name">🏫 ชั้น/ห้อง: ม.4/1  •  เลขที่ 14<br>🏫 โรงเรียน: โรงเรียนรัชตวิทยาคม</span>
+          </div>
+          <div class="lesson-card"><b>แนวคิดการออกแบบ</b><br>HEART MODEL: Hook → Explore → Analyze → Reflect → Transform<br>นำหลักธรรมจากบทเรียนมาสร้างเป็นสถานการณ์ให้ผู้เล่นเรียนรู้ผ่านการเลือกและสะท้อนผล</div>
+          <div class="lesson-card"><b>ขอบเขตเนื้อหา</b><br>อริยสัจ 4 • มรรค 8 • ศีล 5 • พรหมวิหาร 4 • อิทธิบาท 4 • สังคหวัตถุ 4 • กฎแห่งกรรม • บุญกิริยาวัตถุ 3 • ไตรสิกขา</div>
+          <button class="cta gold" onclick="showScreen('home')">กลับหน้าแรก</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+
+// ===== DELUXE SYSTEMS =====
+let audioCtx=null, musicTimer=null, musicOn=false, noteIndex=0;
+const melody=[261.63,329.63,392.00,523.25,392.00,329.63,293.66,392.00];
+function toggleMusic(){
+  musicOn=!musicOn;
+  document.getElementById('musicBtn').textContent=musicOn?'🔊 เพลง: เปิด':'🔇 เพลง: ปิด'; if(document.getElementById('musicBtnTop')) document.getElementById('musicBtnTop').textContent=musicOn?'🔊 เพลง':'🎵 เพลง';
+  if(musicOn) startMusic(); else stopMusic();
+}
+function startMusic(){
+  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  if(musicTimer) return;
+  const play=()=>{
+    if(!musicOn)return;
+    const osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+    osc.type='sine'; osc.frequency.value=melody[noteIndex%melody.length];
+    gain.gain.setValueAtTime(0.0001,audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.045,audioCtx.currentTime+.04);
+    gain.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+.55);
+    osc.connect(gain).connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime+.58);
+    noteIndex++;
+  };
+  play(); musicTimer=setInterval(play,650);
+}
+function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
+function enterGame(start){
+  document.getElementById('startOverlay').classList.add('hide');
+  if(start){resetGame();showScreen('chapters');}
+  else showScreen('home');
+}
+function updateHearts(){
+  const id = state.currentCharacter || 'nont';
+  const value=Math.max(0,Math.min(5,Math.round((state[id]||0)/2)));
+  document.querySelectorAll('#heartRow .heart').forEach((h,i)=>h.classList.toggle('on',i<value));
+  document.getElementById('affinityFill').style.width=(value*20)+'%';
+}
+function characterSVG(key){
+ const c={
+ nont:{hair:'#3d2b2b',shirt:'#52799a'},may:{hair:'#6b4437',shirt:'#c86f83'},poom:{hair:'#27333b',shirt:'#64866e'}
+ }[key]||{hair:'#3d2b2b',shirt:'#52799a'};
+ return `<svg viewBox="0 0 180 260" xmlns="http://www.w3.org/2000/svg">
+ <rect width="180" height="260" fill="none"/>
+ <circle cx="90" cy="66" r="42" fill="#f2c7a5"/>
+ <path d="M47 67Q50 16 91 16Q133 16 135 68L119 45Q90 29 63 48Z" fill="${c.hair}"/>
+ <circle cx="75" cy="69" r="4" fill="#352b2b"/><circle cx="105" cy="69" r="4" fill="#352b2b"/>
+ <path d="M76 94Q90 104 104 94" fill="none" stroke="#a84f59" stroke-width="4" stroke-linecap="round"/>
+ <path d="M39 125Q90 101 141 125L156 259H24Z" fill="${c.shirt}"/>
+ <path d="M58 126L90 157 122 126" fill="#fff" opacity=".9"/>
+ <path d="M43 139L18 205M137 139L162 205" stroke="#f2c7a5" stroke-width="23" stroke-linecap="round"/>
+ </svg>`;
+}
+function setPortrait(key){
+  const p=document.getElementById('portrait'); p.innerHTML=characterSVG(key);
+  state.currentCharacter=key; updateHearts();
+}
+
+const state={mind:0,friend:0,good:0,nont:0,may:0,poom:0,chapter:0,scene:0,score:0,played:0,currentCharacter:'nont'};
+const chapters={
+1:{title:"ปัญหาของเพื่อน",tag:"อริยสัจ 4",scenes:[
+ {speaker:"นนท์",avatar:"🧑🏻‍🎓",text:"ช่วงนี้เราเครียดมาก งานก็เยอะ คะแนนก็เริ่มตก นายคิดว่าเราควรทำยังไง?",choices:[
+  ["ลองแยกก่อนว่า 'ปัญหาคืออะไร' แล้วหาสาเหตุของมัน","อริยสัจ 4 เริ่มจากรู้จักทุกข์และสมุทัย",3,1,0],
+  ["ไม่ต้องคิดมาก เดี๋ยวมันก็ผ่านไปเอง","ยังไม่ได้วิเคราะห์ปัญหาอย่างเป็นขั้นตอน",0,0,-1],
+  ["บอกให้เขาเลิกเรียนไปเลย","ไม่ใช่แนวทางแก้ทุกข์ที่เหมาะสม",0,-1,-1]]},
+ {speaker:"นนท์",avatar:"🧑🏻‍🎓",text:"งั้นปัญหาคือจัดเวลาไม่ดี และเรากังวลเรื่องคะแนนมากเกินไป แล้วขั้นต่อไปล่ะ?",choices:[
+  ["กำหนดเป้าหมายและลงมือแก้ที่สาเหตุทีละอย่าง","เชื่อมกับนิโรธและมรรค: มีเป้าหมายและแนวทางปฏิบัติ",3,1,2],
+  ["รอให้ครูแก้ให้ทั้งหมด","การแก้ปัญหาต้องมีการลงมือปฏิบัติ",0,0,-1]]}]},
+2:{title:"ข้อความในกลุ่มห้อง",tag:"ศีล 5 • สัมมาวาจา",scenes:[
+ {speaker:"เมย์",avatar:"👩🏻‍🎓",text:"มีคนส่งข่าวลือเกี่ยวกับเพื่อนในกลุ่มห้อง และชวนเราแชร์ต่อ เราควรทำอย่างไร?",choices:[
+  ["ไม่แชร์ และตรวจสอบข้อมูลก่อนพูด","สอดคล้องกับศีลข้อ 4 และสัมมาวาจา",3,2,2],
+  ["แชร์ก่อน เดี๋ยวค่อยลบ","การพูด/ส่งต่อข้อมูลโดยไม่ตรวจสอบอาจทำให้ผู้อื่นเสียหาย",0,-1,-1],
+  ["แต่งเรื่องเพิ่มให้ตลกขึ้น","ไม่สอดคล้องกับการพูดจริงและรับผิดชอบ",0,-2,-2]]},
+ {speaker:"เมย์",avatar:"👩🏻‍🎓",text:"ถ้าเพื่อนถามว่าเราเห็นข้อความนั้นไหม?",choices:[
+  ["ตอบตามความจริงและพูดด้วยถ้อยคำสุภาพ","สัมมาวาจาเน้นความจริงและการสื่อสารที่เหมาะสม",3,2,2],
+  ["โกหกเพื่อให้เรื่องจบ","ไม่สอดคล้องกับศีลข้อ 4",0,0,-1]]}]},
+3:{title:"เพื่อนที่กำลังทุกข์",tag:"พรหมวิหาร 4",scenes:[
+ {speaker:"เมย์",avatar:"👩🏻‍🎓",text:"เพื่อนอีกคนโดนล้อเรื่องคะแนนจนไม่อยากเข้าห้อง เราควรเริ่มจากอะไร?",choices:[
+  ["เข้าไปถามด้วยความเมตตาและรับฟัง","เมตตาคือปรารถนาให้ผู้อื่นมีความสุข",2,3,2],
+  ["บอกว่าเรื่องแค่นี้เอง อย่าคิดมาก","อาจทำให้ผู้ที่กำลังทุกข์รู้สึกว่าไม่ได้รับการเข้าใจ",0,-1,0]]},
+ {speaker:"เมย์",avatar:"👩🏻‍🎓",text:"ถ้าเราเห็นเพื่อนพยายามจนทำคะแนนได้ดีขึ้น เราควรทำอย่างไร?",choices:[
+  ["ยินดีกับเขาและให้กำลังใจ","มุทิตา คือยินดีเมื่อผู้อื่นได้ดี",2,3,2],
+  ["เปรียบเทียบกับตัวเองแล้วอิจฉา","ไม่สอดคล้องกับมุทิตา",0,-1,-1],
+  ["ปล่อยผ่านโดยไม่สนใจเลย","อุเบกขาไม่ใช่ความเฉยชา แต่เป็นความเป็นกลางอย่างมีเหตุผล",1,0,0]]}]},
+4:{title:"งานกลุ่มใกล้ส่ง",tag:"อิทธิบาท 4",scenes:[
+ {speaker:"ภูมิ",avatar:"🧑🏻‍🎓",text:"เหลือเวลา 3 วัน แต่งานกลุ่มยังไม่เสร็จ เราจะจัดการยังไงดี?",choices:[
+  ["แบ่งงาน ตั้งเป้าหมาย และทำอย่างต่อเนื่อง","ฉันทะ + วิริยะ ช่วยให้เกิดแรงใจและความเพียร",3,1,2],
+  ["ทำคืนเดียวก่อนส่ง","ขาดการวางแผนและความเพียรอย่างต่อเนื่อง",0,0,-1]]},
+ {speaker:"ภูมิ",avatar:"🧑🏻‍🎓",text:"ทำไปแล้วแต่พบว่าข้อมูลบางส่วนผิด เราควรทำอย่างไร?",choices:[
+  ["ตรวจสอบ วิเคราะห์ และปรับปรุงงาน","วิมังสา คือการพิจารณา ตรวจสอบ และแก้ไข",3,1,2],
+  ["ส่งไปเลย ไม่ต้องแก้","ไม่ใช้วิมังสา",0,0,-1]]}]},
+5:{title:"ทำดีในโรงเรียน",tag:"สังคหวัตถุ 4",scenes:[
+ {speaker:"เมย์",avatar:"👩🏻‍🎓",text:"ห้องเราจะทำกิจกรรมช่วยห้องสมุด เราจะช่วยกันอย่างไร?",choices:[
+  ["แบ่งหนังสือและอุปกรณ์ให้กัน พร้อมช่วยงาน","ทานและอัตถจริยา: แบ่งปันและทำตนให้เป็นประโยชน์",3,3,3],
+  ["ให้คนอื่นทำทั้งหมด","ไม่ช่วยสร้างประโยชน์ร่วมกัน",0,-1,0]]},
+ {speaker:"เมย์",avatar:"👩🏻‍🎓",text:"เวลาทำงานกับคนที่คิดต่าง เราควรพูดอย่างไร?",choices:[
+  ["ใช้ปิยวาจาและวางตัวสม่ำเสมอ","สอดคล้องกับปิยวาจาและสมานัตตตา",3,2,2],
+  ["พูดประชดเพื่อให้เขาเงียบ","ไม่ใช่การสื่อสารที่เกื้อกูล",0,-1,-1]]}]},
+6:{title:"ผลของการกระทำ",tag:"กฎแห่งกรรม • บุญกิริยาวัตถุ 3",scenes:[
+ {speaker:"นนท์",avatar:"🧑🏻‍🎓",text:"ถ้าเราเห็นเพื่อนเดือดร้อนแล้วช่วยโดยไม่หวังผล เรากำลังทำอะไร?",choices:[
+  ["ทำความดีด้วยทาน/การช่วยเหลือ","สอดคล้องกับแนวคิดบุญกิริยาวัตถุ และการกระทำที่เกื้อกูล",2,2,3],
+  ["ทำเพราะอยากให้คนอื่นชมเท่านั้น","แรงจูงใจต่างจากการทำความดีเพื่อเกื้อกูล",0,0,1]]},
+ {speaker:"นนท์",avatar:"🧑🏻‍🎓",text:"แล้วกฎแห่งกรรมสอนอะไรในบริบทบทเรียนนี้?",choices:[
+  ["การกระทำมีผลตามเหตุปัจจัย จึงควรรับผิดชอบการกระทำของตน","หลักสำคัญคือการกระทำส่งผล จึงควรทำสิ่งที่ดีและรับผิดชอบ",3,1,3],
+  ["ทำอะไรก็ได้เพราะผลไม่เกี่ยวกับการกระทำ","ตรงข้ามกับหลักที่เรียน",0,0,-2]]}]},
+7:{title:"ฝึกตนให้ครบ 3 ด้าน",tag:"ไตรสิกขา",scenes:[
+ {speaker:"ภูมิ",avatar:"🧑🏻‍🎓",text:"ถ้าอยากพัฒนาตัวเองอย่างเป็นระบบ ไตรสิกขามี 3 ด้านอะไร?",choices:[
+  ["ศีล → สมาธิ → ปัญญา","ฝึกกายและพฤติกรรม → ฝึกจิต → ฝึกความเข้าใจ",3,1,3],
+  ["เงิน → คะแนน → ชื่อเสียง","ไม่ใช่ไตรสิกขา",0,0,-1]]},
+ {speaker:"ภูมิ",avatar:"🧑🏻‍🎓",text:"วันนี้เราจะเริ่มฝึกอย่างไรให้เห็นผลในชีวิตประจำวัน?",choices:[
+  ["เริ่มจากพฤติกรรมที่ดี ฝึกใจให้มีสมาธิ แล้วคิดพิจารณาให้รอบคอบ","เป็นการเชื่อมศีล สมาธิ และปัญญาเข้ากับชีวิตจริง",3,2,3],
+  ["อ่านจำอย่างเดียวแต่ไม่ลองปฏิบัติ","ความรู้จะมีประโยชน์มากขึ้นเมื่อเชื่อมกับการปฏิบัติ",1,0,0]]}]},
+8:{title:"ทางเลือกสุดท้าย",tag:"มรรคมีองค์ 8",scenes:[
+ {speaker:"ครู",avatar:"🧘🏻",text:"ก่อนจบการเดินทาง ครูถามว่า หลักธรรมมีไว้เพื่ออะไร?",choices:[
+  ["นำไปใช้แก้ปัญหาและดำเนินชีวิตอย่างมีสติ","สอดคล้องกับเป้าหมายของบทเรียน: รู้หลักธรรมและนำไปใช้",4,2,4],
+  ["จำคำศัพท์เพื่อทำข้อสอบเท่านั้น","การจำเป็นส่วนหนึ่ง แต่การนำไปใช้ช่วยให้เกิดความเข้าใจ",1,0,0]]},
+ {speaker:"ครู",avatar:"🧘🏻",text:"เลือกคำตอบที่สะท้อนแนวคิด 'คิดดี → พูดดี → ทำดี → มีสติ'",choices:[
+  ["เลือกสิ่งที่ถูกต้อง แม้ไม่มีใครมองเห็น","สะท้อนการใช้หลักธรรมเป็นแนวทางในการดำเนินชีวิต",4,2,4],
+  ["ทำดีเฉพาะตอนมีคนชม","ความดีไม่ควรขึ้นอยู่กับการได้รับคำชม",1,0,0]]}]}
+};
+
+function showScreen(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+ window.scrollTo({top:0,behavior:'smooth'});
+ updateUI();
+}
+document.querySelectorAll('.navbtn').forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));
+
+function updateUI(){
+ document.getElementById('mind').textContent=state.mind;
+ document.getElementById('friend').textContent=state.friend;
+ document.getElementById('good').textContent=state.good;
+ document.getElementById('mNont').style.width=Math.min(100,Math.max(0,50+state.nont*8))+'%';
+ document.getElementById('mMay').style.width=Math.min(100,Math.max(0,50+state.may*8))+'%';
+ document.getElementById('mPoom').style.width=Math.min(100,Math.max(0,50+state.poom*8))+'%';
+}
+function startChapter(n){
+ state.chapter=n;
+  state.scene=0;
+  const first=chapters[n].scenes[0];
+  state.currentCharacter = first.speaker==='เมย์'?'may':first.speaker==='ภูมิ'?'poom':'nont';
+  setPortrait(state.currentCharacter);
+  document.getElementById('cgBanner').style.display='block'; state.scene=0; state.played++;
+ renderScene(); showScreen('story');
+}
+function renderScene(){
+ const ch=chapters[state.chapter], sc=ch.scenes[state.scene];
+ document.getElementById('chapterTag').textContent='บทที่ '+state.chapter+' • '+ch.tag;
+ document.getElementById('chapterTitle').textContent=ch.title;
+ document.getElementById('storyProgress').textContent=`สถานการณ์ ${state.scene+1}/${ch.scenes.length}`;
+ document.getElementById('portrait').textContent=sc.avatar;
+ document.getElementById('speaker').textContent=sc.speaker;
+ document.getElementById('text').textContent=sc.text;
+ const box=document.getElementById('choices'); box.innerHTML='';
+ const fb=document.getElementById('feedback'); fb.className='feedback'; fb.innerHTML='';
+ document.getElementById('nextBtn').style.display='none';
+ sc.choices.forEach((c,i)=>{
+   const b=document.createElement('button'); b.className='choice';
+   b.innerHTML=`<b>${String.fromCharCode(65+i)}. ${c[0]}</b><small>${c[1]}</small>`;
+   b.onclick=()=>choose(c,b); box.appendChild(b);
+ });
+}
+function choose(c,btn){
+ document.querySelectorAll('.choice').forEach(x=>x.disabled=true);
+ btn.style.borderColor='var(--gold)';
+ state.mind+=c[2]; state.friend+=c[3]; state.good+=c[4];
+ if(state.chapter===1||state.chapter===2||state.chapter===6) state.nont+=c[3];
+ if(state.chapter===3||state.chapter===5) state.may+=c[3];
+ if(state.chapter===4||state.chapter===7) state.poom+=c[3];
+ state.score+=Math.max(0,c[2]+c[3]+c[4]);
+ const fb=document.getElementById('feedback');
+ fb.className='feedback show '+(c[4]>=2?'good':c[4]<0?'warn':'');
+ fb.innerHTML='<b>💡 หลักธรรมที่เกี่ยวข้อง</b><br>'+c[1];
+ document.getElementById('nextBtn').style.display='inline-block';
+ updateUI();
+}
+function nextScene(){
+ if(state.scene<chapters[state.chapter].scenes.length-1){state.scene++;renderScene();}
+ else{
+   state.score+=2;
+   showScreen('result');
+   buildResult();
+ }
+}
+function buildResult(){
+ const total=Math.max(1,state.played*8);
+ document.getElementById('score').textContent=state.score;
+ let text='ทุกการเลือกคือโอกาสในการเรียนรู้';
+ if(state.good>=12) text='คุณเลือกแนวทางที่เกื้อกูลผู้อื่นหลายครั้ง และเชื่อมโยงหลักธรรมกับสถานการณ์ได้ดี';
+ else if(state.mind>=10) text='คุณให้ความสำคัญกับการคิดก่อนตัดสินใจและการใช้เหตุผล';
+ else if(state.friend>=8) text='คุณให้ความสำคัญกับความสัมพันธ์ การพูดที่ดี และการช่วยเหลือผู้อื่น';
+ document.getElementById('resultText').textContent=text;
+ const badges=[];
+ if(state.mind>=8) badges.push('🧠 ผู้มีสติ');
+ if(state.friend>=8) badges.push('🤝 ผู้เกื้อกูล');
+ if(state.good>=10) badges.push('🌱 ผู้สร้างความดี');
+ if(state.score>=25) badges.push('☸️ นักปฏิบัติธรรม');
+ document.getElementById('badges').innerHTML=badges.map(x=>`<span class="badge">${x}</span>`).join('') || '<span class="badge">🌿 ผู้เริ่มต้นบนเส้นทางธรรม</span>';
+}
+function resetGame(){
+ Object.assign(state,{mind:0,friend:0,good:0,nont:0,may:0,poom:0,chapter:0,scene:0,score:0,played:0});
+ updateUI(); showScreen('chapters');
+}
+
+const quiz=[
+ {q:'อริยสัจ 4 ข้อใดหมายถึง “สาเหตุของทุกข์”?',a:['ทุกข์','สมุทัย','นิโรธ','มรรค'],c:1},
+ {q:'ข้อใดเป็นการใช้สัมมาวาจา?',a:['พูดเท็จเพื่อให้ตนรอด','พูดประชด','พูดจริงและสุภาพโดยคำนึงถึงผลกระทบ','ส่งข่าวลือทันที'],c:2},
+ {q:'ข้อใดคือ “มุทิตา” ในพรหมวิหาร 4?',a:['ปรารถนาให้ผู้อื่นมีความสุข','ช่วยเมื่อผู้อื่นทุกข์','ยินดีเมื่อผู้อื่นได้ดี','วางใจเป็นกลาง'],c:2},
+ {q:'ข้อใดคือองค์ประกอบของอิทธิบาท 4?',a:['ศีล สมาธิ ปัญญา','ฉันทะ วิริยะ จิตตะ วิมังสา','ทาน ศีล ภาวนา','เมตตา กรุณา มุทิตา อุเบกขา'],c:1},
+ {q:'ไตรสิกขาประกอบด้วยอะไร?',a:['ศีล สมาธิ ปัญญา','ทาน ปิยวาจา อัตถจริยา สมานัตตตา','ทุกข์ สมุทัย นิโรธ มรรค','สัมมาวาจา สัมมาอาชีวะ สัมมาสติ'],c:0},
+ {q:'บุญกิริยาวัตถุ 3 คือข้อใด?',a:['ทาน ศีล ภาวนา','ฉันทะ วิริยะ จิตตะ','เมตตา กรุณา มุทิตา','ทุกข์ สมุทัย นิโรธ'],c:0}
+];
+function loadQuiz(){
+ const area=document.getElementById('quizArea');
+ area.innerHTML=quiz.map((x,i)=>`<div class="qbox"><b>${i+1}. ${x.q}</b>${x.a.map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}</div>`).join('');
+}
+function gradeQuiz(){
+ let correct=0;
+ quiz.forEach((x,i)=>{const v=document.querySelector(`input[name=q${i}]:checked`);if(v&&+v.value===x.c)correct++;});
+ const r=document.getElementById('quizResult');r.className='feedback show '+(correct>=4?'good':'');
+ r.innerHTML=`<b>ได้ ${correct}/${quiz.length} คะแนน</b><br>${correct===quiz.length?'ยอดเยี่ยม! ทบทวนเนื้อหาได้ครบ':'ลองกลับไปอ่านคลังธรรมแล้วทำใหม่ได้เสมอ'}`;
+}
+loadQuiz();updateUI();
+window.addEventListener('load',()=>{updateHearts();});
+</script>
+</body>
+</html>
